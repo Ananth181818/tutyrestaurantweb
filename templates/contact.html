@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Tuty Restaurant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg:#11100e; --panel:#1a1815; --panel-soft:#24211d; --text:#f8f3ea; --muted:#c8bca9; --line:rgba(255,255,255,.12); --accent:#d89b43; --shadow:0 22px 70px rgba(0,0,0,.34); }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { min-height:100vh; font-family:Inter,system-ui,sans-serif; color:var(--text); background:linear-gradient(90deg,rgba(17,16,14,.92),rgba(17,16,14,.78)),url("./img/IMG-20251107-WA0007.jpg") center/cover fixed; line-height:1.6; }
+    nav { position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; padding:18px 6%; background:rgba(17,16,14,.92); border-bottom:1px solid var(--line); backdrop-filter:blur(16px); }
+    .brand { display:flex; align-items:center; gap:12px; color:var(--text); text-decoration:none; font-weight:800; letter-spacing:.08em; }
+    .brand img { width:42px; height:42px; object-fit:cover; border-radius:8px; border:1px solid rgba(216,155,67,.55); }
+    .nav-links { display:flex; align-items:center; gap:22px; }
+    .nav-links a { color:var(--muted); text-decoration:none; font-size:.95rem; font-weight:600; }
+    .nav-links a:hover,.nav-links a.active { color:var(--accent); }
+    .hero { padding:90px 6% 54px; }
+    .hero-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr); gap:34px; max-width:1180px; margin:0 auto; align-items:stretch; }
+    .hero-copy { display:flex; flex-direction:column; justify-content:center; min-height:450px; }
+    .eyebrow { color:var(--accent); font-weight:800; font-size:.78rem; letter-spacing:.18em; text-transform:uppercase; margin-bottom:14px; }
+    h1 { max-width:760px; font-size:clamp(2.6rem,6vw,5.2rem); line-height:.98; letter-spacing:0; margin-bottom:22px; }
+    .hero-copy p { max-width:640px; color:var(--muted); font-size:1.08rem; }
+    .contact-card { background:rgba(26,24,21,.9); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow); padding:30px; }
+    .contact-card h2 { font-size:1.35rem; margin-bottom:18px; }
+    .detail-list { display:grid; gap:16px; }
+    .detail { padding:18px; background:var(--panel-soft); border:1px solid var(--line); border-radius:8px; }
+    .detail span { display:block; color:var(--accent); font-size:.75rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin-bottom:6px; }
+    .detail a,.detail p { color:var(--text); text-decoration:none; font-weight:600; font-size:1rem; }
+    .quick-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; min-height:46px; padding:0 18px; border-radius:8px; text-decoration:none; font-weight:800; transition:.2s ease; }
+    .btn-primary { background:var(--accent); color:#17120b; }
+    .btn-secondary { border:1px solid rgba(216,155,67,.55); color:var(--accent); }
+    .btn:hover { transform:translateY(-2px); }
+    .info-strip { max-width:1180px; margin:0 auto; padding:0 6% 80px; display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .info-box { background:rgba(26,24,21,.82); border:1px solid var(--line); border-radius:8px; padding:22px; }
+    .info-box h3 { color:var(--accent); font-size:.95rem; margin-bottom:8px; }
+    .info-box p { color:var(--muted); font-size:.94rem; }
+    footer { border-top:1px solid var(--line); padding:24px 6%; color:var(--muted); background:rgba(10,9,8,.9); text-align:center; font-size:.9rem; }
+    @media (max-width:850px) { nav { align-items:flex-start; gap:16px; flex-direction:column; } .nav-links { flex-wrap:wrap; gap:14px; } .hero-grid,.info-strip { grid-template-columns:1fr; } .hero-copy { min-height:auto; } }
+  </style>
+</head>
+<body>
+  <!-- Session synchronizer between Django and LocalStorage -->
+  <script>
+    {% if user.is_authenticated %}
+    localStorage.setItem("tuty_user", JSON.stringify({
+      name: "{{ user.first_name|escapejs }}",
+      email: "{{ user.email|escapejs }}"
+    }));
+    {% else %}
+    localStorage.removeItem("tuty_user");
+    {% endif %}
+  </script>
+
+  <nav>
+    <a class="brand" href="{% url 'home' %}"><img src="{% static 'img/IMG-20251107-WA0050.jpg' %}" alt="Tuty Restaurant logo">TUTY RESTO</a>
+    <div class="nav-links">
+      <a href="{% url 'home' %}">Home</a><a href="{% url 'party' %}">Party Hall</a><a href="{% url 'orders' %}">Orders</a><a href="{% url 'aboutus' %}">About</a><a class="active" href="{% url 'contact' %}">Contact</a>
+    </div>
+  </nav>
+  <main>
+    <section class="hero"><div class="hero-grid"><div class="hero-copy"><div class="eyebrow">Contact Tuty Restaurant</div><h1>Reserve a table, book a room, or plan your next function.</h1><p>Our team is ready to help with dining enquiries, party hall bookings, room reservations, and catering plans in Tuticorin.</p></div><div class="contact-card"><h2>Reach Us Directly</h2><div class="detail-list"><div class="detail"><span>Address</span><p>No.18, WGC Road, near Old Bus Stand, Tuticorin - 628002</p></div><div class="detail"><span>Phone</span><a href="tel:+919876543210">+91 98765 43210</a></div><div class="detail"><span>Email</span><a href="mailto:info@tutyrestaurant.com">info@tutyrestaurant.com</a></div><div class="detail"><span>Location</span><p>Tuticorin, Tamil Nadu, India</p></div></div><div class="quick-actions"><a class="btn btn-primary" href="tel:+919876543210">Call Now</a><a class="btn btn-secondary" href="{% url "party" %}">Book Venue</a></div></div></div></section>
+    <section class="info-strip"><div class="info-box"><h3>Dining Hours</h3><p>Open daily for family dining, takeaways, and group food orders.</p></div><div class="info-box"><h3>Events</h3><p>Banquet hall support for birthdays, engagements, meetings, and private celebrations.</p></div><div class="info-box"><h3>Rooms</h3><p>AC and non-AC room options for couples and families with restaurant service nearby.</p></div></section>
+  </main>
+  <footer><p>&copy; 2026 Tuty Restaurant. All rights reserved.</p></footer>
+</body>
+</html>

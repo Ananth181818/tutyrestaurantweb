@@ -1,0 +1,304 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Room (AC) - Tuty Restaurant</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <style>
+        :root {
+            --primary-color: #d89b43;
+            --primary-hover: #c1802b;
+            --secondary-color: #f0c16b;
+            --bg-color: #11100e;
+            --bg-card: rgba(27, 25, 21, 0.92);
+            --text-color: #fbf6ed;
+            --text-muted: #c9bfad;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --border-hover: rgba(216, 155, 67, 0.55);
+            --shadow: 0 22px 70px rgba(0, 0, 0, 0.34);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: radial-gradient(circle at 15% 10%, rgba(216,155,67,0.12), transparent 28%),
+                        linear-gradient(180deg, #11100e 0%, #171410 48%, #0d0c0b 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 🔶 Navigation Bar */
+        nav {
+            padding: 1rem 6%;
+            background: rgba(17, 16, 14, 0.92);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #11100e;
+        }
+
+        .nav-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .nav-title span {
+            color: var(--primary-color);
+        }
+
+        /* 👑 Detail Section */
+        .detail-container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 50px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .detail-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                margin: 30px auto;
+            }
+        }
+
+        /* Gallery */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 380px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .main-image:hover img {
+            transform: scale(1.03);
+        }
+
+        .thumbnail-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+        }
+
+        .thumbnail {
+            height: 90px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+        .thumbnail.active, .thumbnail:hover {
+            border-color: var(--primary-color);
+        }
+
+        .thumbnail.active img, .thumbnail:hover img {
+            opacity: 1;
+        }
+
+        /* Content info */
+        .content-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            text-align: left;
+        }
+
+        .content-panel h1 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .price-badge {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .features-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+        }
+
+        .features-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .features-list li {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .check-icon {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #17120b;
+            box-shadow: 0 10px 25px rgba(216, 155, 67, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(216, 155, 67, 0.28);
+        }
+    </style>
+</head>
+<body>
+   <!-- Navbar -->
+   <nav>
+       <a href="{% url 'party' %}" class="back-btn" aria-label="Back">
+           <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>
+       </a>
+       <div class="nav-title">TUTY <span>RESTO</span> / Stay Details</div>
+   </nav>
+
+   <!-- Main content -->
+   <div class="detail-container">
+       <!-- Left Side: Interactive Gallery -->
+       <div class="gallery-container">
+           <div class="main-image">
+               <img id="main-display-img" src="{% static 'anath/IMG-20251119-WA0030.jpg' %}" alt="Room main photo">
+           </div>
+           <div class="thumbnail-row">
+               <div class="thumbnail active" onclick="swapImg('{% static 'anath/IMG-20251119-WA0030.jpg' %}', this)">
+                   <img src="{% static 'anath/IMG-20251119-WA0030.jpg' %}" alt="Room view 1">
+               </div>
+               <div class="thumbnail" onclick="swapImg('{% static 'anath/IMG-20251119-WA0019.jpg' %}', this)">
+                   <img src="{% static 'anath/IMG-20251119-WA0019.jpg' %}" alt="Room view 2">
+               </div>
+               <div class="thumbnail" onclick="swapImg('{% static 'anath/IMG-20251119-WA0025.jpg' %}', this)">
+                   <img src="{% static 'anath/IMG-20251119-WA0025.jpg' %}" alt="Room view 3">
+               </div>
+           </div>
+       </div>
+
+       <!-- Right Side: Content Details -->
+       <div class="content-panel">
+           <h1>Family Room (AC)</h1>
+           <div class="price-badge">Rs.1,500 <span style="font-size: 0.95rem; font-weight:400; color: var(--text-muted);">/ night</span></div>
+           
+           <h2 class="features-title">Room Features</h2>
+           <ul class="features-list">
+               <li><span class="check-icon">✓</span> Two Cozy Queen Beds</li>
+               <li><span class="check-icon">✓</span> High-Power Air Conditioning</li>
+               <li><span class="check-icon">✓</span> Spacious Lounge Seating Area</li>
+               <li><span class="check-icon">✓</span> Complimentary Morning Breakfast</li>
+               <li><span class="check-icon">✓</span> Dedicated VIP Room Service</li>
+           </ul>
+
+           <a href="{% url 'roombook' %}?room_type=Family+Room+(AC)&price=1,500" class="btn btn-primary">Book Now</a>
+       </div>
+   </div>
+
+   <script>
+       function swapImg(src, thumbElement) {
+           $('#main-display-img').attr('src', src);
+           $('.thumbnail').removeClass('active');
+           $(thumbElement).addClass('active');
+       }
+   </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Non-Veg Menu - Tuty Restaurant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: transparent;
+            color: #f4f4f2;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            padding: 10px;
+        }
+        #slot {
+            display: grid;
+            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            justify-items: center;
+            cursor: pointer;
+            width: 100%;
+        }
+        .card {
+            background: rgba(25, 25, 25, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            width: 100%;
+            max-width: 220px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: #ff9800;
+            box-shadow: 0 12px 40px 0 rgba(255, 152, 0, 0.25);
+        }
+        .badge-container { position: absolute; top: 10px; right: 10px; z-index: 2; }
+        .diet-badge {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid;
+            padding: 2px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 3px;
+        }
+        .diet-badge::after { content: ''; display: block; width: 10px; height: 10px; border-radius: 50%; }
+        .diet-badge.nonveg-badge { border-color: #f44336; }
+        .diet-badge.nonveg-badge::after { background: #f44336; }
+        .image-container { width: 100%; height: 140px; overflow: hidden; position: relative; }
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-bottom: 2px solid rgba(255, 152, 0, 0.2);
+        }
+        .card:hover img { transform: scale(1.08); }
+        .info-container { padding: 15px 12px; display: flex; flex-direction: column; flex-grow: 1; }
+        .food-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+            text-align: left;
+        }
+        .card:hover .food-name { color: #ff9800; }
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #a0a0a5;
+            margin-bottom: 8px;
+        }
+        .rating { color: #ffc107; font-weight: 600; display: flex; align-items: center; gap: 2px; }
+        .prep-time { display: flex; align-items: center; gap: 4px; }
+        .spice-row { margin-bottom: 12px; text-align: left; }
+        .spice-level {
+            font-size: 0.7rem;
+            color: #ff9800;
+            background: rgba(255, 152, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .food-price {
+            font-size: 1rem;
+            color: #ff9800;
+            font-weight: 700;
+            margin-top: auto;
+            text-align: left;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="slot">
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="badge-container"><span class="diet-badge nonveg-badge" title="Non-Vegetarian"></span></div>
+            <div class="image-container">
+                <img src="{% static 'img/IMG-20251108-WA0001.jpg' %}" alt="Parotta">
+            </div>
+            <div class="info-container">
+                <div class="food-name">Parotta</div>
+                <div class="meta-row"><span class="rating">★ 4.7</span><span class="prep-time">🕒 10 min</span></div>
+                <div class="spice-row"><span class="spice-level">🌶️ Mild Spice</span></div>
+                <div class="food-price">Rs.20</div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="badge-container"><span class="diet-badge nonveg-badge" title="Non-Vegetarian"></span></div>
+            <div class="image-container">
+                <img src="{% static 'stockphotos/foods/BBQ-Chicken-Pizza-4.jpg' %}" alt="BBQ Chicken Pizza">
+            </div>
+            <div class="info-container">
+                <div class="food-name">Barbecue Chicken Pizza</div>
+                <div class="meta-row"><span class="rating">★ 4.8</span><span class="prep-time">🕒 22 min</span></div>
+                <div class="spice-row"><span class="spice-level">🌶️🌶️ Medium</span></div>
+                <div class="food-price">Rs.100</div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="badge-container"><span class="diet-badge nonveg-badge" title="Non-Vegetarian"></span></div>
+            <div class="image-container">
+                <img src="{% static 'img/IMG-20251107-WA0055.jpg' %}" alt="Beef Biriyani">
+            </div>
+            <div class="info-container">
+                <div class="food-name">Beef Biryani</div>
+                <div class="meta-row"><span class="rating">★ 4.9</span><span class="prep-time">🕒 18 min</span></div>
+                <div class="spice-row"><span class="spice-level">🌶️🌶️🌶️ Hot Spice</span></div>
+                <div class="food-price">Rs.150</div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="badge-container"><span class="diet-badge nonveg-badge" title="Non-Vegetarian"></span></div>
+            <div class="image-container">
+                <img src="{% static 'stockphotos/foods/Grilled-Chicken-Sandwich-750x750.jpg' %}" alt="Grilled Chicken Sandwich">
+            </div>
+            <div class="info-container">
+                <div class="food-name">Grilled Chicken Sandwich</div>
+                <div class="meta-row"><span class="rating">★ 4.5</span><span class="prep-time">🕒 12 min</span></div>
+                <div class="spice-row"><span class="spice-level">🌶️🌶️ Medium</span></div>
+                <div class="food-price">Rs.80</div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="badge-container"><span class="diet-badge nonveg-badge" title="Non-Vegetarian"></span></div>
+            <div class="image-container">
+                <img src="{% static 'img/IMG-20251107-WA0054.jpg' %}" alt="Chicken Biriyani">
+            </div>
+            <div class="info-container">
+                <div class="food-name">Chicken Biryani</div>
+                <div class="meta-row"><span class="rating">★ 4.9</span><span class="prep-time">🕒 18 min</span></div>
+                <div class="spice-row"><span class="spice-level">🌶️🌶️🌶️ Hot Spice</span></div>
+                <div class="food-price">Rs.120</div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="badge-container"><span class="diet-badge nonveg-badge" title="Non-Vegetarian"></span></div>
+            <div class="image-container">
+                <img src="{% static 'stockphotos/foods/Chicken-Kathi-Roll-500x500.jpg' %}" alt="Chicken Roll">
+            </div>
+            <div class="info-container">
+                <div class="food-name">Chicken Roll</div>
+                <div class="meta-row"><span class="rating">★ 4.6</span><span class="prep-time">🕒 12 min</span></div>
+                <div class="spice-row"><span class="spice-level">🌶️🌶️ Medium</span></div>
+                <div class="food-price">Rs.60</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll(".card").forEach(card => {
+            card.addEventListener("click", function () {
+                const title = this.querySelector(".food-name").innerText;
+                const price = this.querySelector(".food-price").innerText;
+                const img = this.querySelector("img").src;
+
+                const html = `
+                    <div class="product-popup-content" style="color: #f4f4f2; font-family: 'Inter', sans-serif; text-align: center;">
+                        <img src="${img}" style="width:100%; height:180px; object-fit:cover; border-radius:12px; border: 1px solid rgba(255,152,0,0.3); margin-bottom:15px;">
+                        <h3 style="margin: 0 0 10px 0; color: #ff9800; font-size: 1.4rem; font-family: 'Playfair Display', serif; font-weight:700;">${title}</h3>
+                        <p style="margin: 0 0 20px 0; color: #e0e0e0; font-weight: bold; font-size: 1.1rem;">Price: ${price}</p>
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <button onclick="window.parent.postMessage({type:'closePopup'},'*')" 
+                                style="padding:10px 20px; background:transparent; color:#ff9800; border:1px solid #ff9800; border-radius:30px; cursor:pointer; font-weight:600; width: 110px;">
+                                Close
+                            </button>
+                            <button onclick="window.parent.postMessage({type:'closePopup'},'*'); window.parent.location.href={% url 'orders' %} 
+                                style="padding:10px 20px; background:linear-gradient(135deg, #ff9800, #e67e22); color:white; border:none; border-radius:30px; cursor:pointer; font-weight:600; width: 110px; box-shadow: 0 4px 15px rgba(255,152,0,0.3);">
+                                Order Now
+                            </button>
+                        </div>
+                    </div>
+                `;
+                window.parent.postMessage({ type: "showProduct", html: html }, "*");
+            });
+        });
+    </script>
+</body>
+</html>

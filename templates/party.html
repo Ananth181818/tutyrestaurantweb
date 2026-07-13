@@ -1,0 +1,1010 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms & Party Hall Bookings - Tuty Restaurant</title>
+    <!-- Google Fonts for Luxury Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <style>
+        :root {
+            --primary-color: #ff9800; /* Warm Accent Gold */
+            --primary-hover: #e68a00;
+            --secondary-color: #d4af37; /* Metallic Gold */
+            --bg-color: #0c0c0b; /* Dark background */
+            --bg-card: rgba(22, 22, 20, 0.7); /* Translucent cards */
+            --text-color: #f5f5f7;
+            --text-muted: #a0a0a5;
+            --border-color: rgba(212, 175, 55, 0.12);
+            --border-hover: rgba(212, 175, 55, 0.4);
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* 🔶 Navigation Bar */
+        nav {
+            background: rgba(12, 12, 11, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            transition: var(--transition);
+        }
+
+        nav.scrolled {
+            background: rgba(12, 12, 11, 0.98);
+            padding: 0.8rem 5%;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.6rem;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .logo img {
+            height: 38px;
+            width: auto;
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: none;
+        }
+
+        .hamburger .line {
+            fill: none;
+            stroke: white;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: all 0.4s ease;
+        }
+
+        .menu-toggle.open .top {
+            transform: translateY(15px) rotate(45deg);
+            transform-origin: center;
+        }
+
+        .menu-toggle.open .middle {
+            opacity: 0;
+        }
+
+        .menu-toggle.open .bottom {
+            transform: translateY(-15px) rotate(-45deg);
+            transform-origin: center;
+        }
+
+        /* 👑 Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.85)), 
+                        url("{% static 'img/IMG-20251107-WA0033.jpg' %}") no-repeat center center/cover;
+            height: 55vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            max-width: 700px;
+            margin-bottom: 25px;
+            font-family: var(--font-heading);
+            font-style: italic;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.8rem;
+            border-radius: 30px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #e67e22);
+            color: #000;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e67e22, var(--primary-hover));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.45);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 152, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* 🛏️ Rooms Section */
+        .section-padding {
+            padding: 90px 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 55px auto;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .room-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .room-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 15px 45px rgba(255, 152, 0, 0.15);
+        }
+
+        .room-img-container {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .room-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .room-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .room-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--primary-color);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .room-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .room-content h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .room-price {
+            font-size: 1.15rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .room-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .room-features li {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .check-icon {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .room-action {
+            margin-top: auto;
+        }
+
+        /* 🏆 Features Grid */
+        .features-section {
+            background: rgba(12, 12, 11, 0.4);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            color: #fff;
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* 🍮 Footer Styles */
+        footer {
+            background-color: #080807;
+            color: var(--text-color);
+            padding: 85px 5% 30px 5%;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            font-family: var(--font-body);
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .footer-about img {
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+            margin-bottom: 18px;
+        }
+
+        .footer-about h3 {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .footer-about p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h4, .footer-contact h4 {
+            color: #fff;
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-links h4::after, .footer-contact h4::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-contact p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-contact svg {
+            fill: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 60px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 25px;
+        }
+
+        @media screen and (max-width: 992px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: -100%;
+                background-color: rgba(12, 12, 11, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                width: 280px;
+                height: calc(100vh - 70px);
+                padding: 40px 20px;
+                gap: 2rem;
+                box-shadow: -10px 10px 30px rgba(0,0,0,0.5);
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                align-items: flex-start;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                width: 100%;
+                font-size: 1.1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+    
+
+        /* Professional page refresh */
+        :root {
+            --primary-color: #d89b43;
+            --primary-hover: #c1802b;
+            --secondary-color: #f0c16b;
+            --bg-color: #11100e;
+            --bg-card: rgba(27, 25, 21, 0.92);
+            --text-color: #fbf6ed;
+            --text-muted: #c9bfad;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --border-hover: rgba(216, 155, 67, 0.55);
+            --shadow: 0 22px 70px rgba(0, 0, 0, 0.34);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 15% 10%, rgba(216,155,67,0.12), transparent 28%),
+                linear-gradient(180deg, #11100e 0%, #171410 48%, #0d0c0b 100%);
+        }
+
+        nav {
+            padding: 1rem 6%;
+            background: rgba(17, 16, 14, 0.92);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            letter-spacing: 0.08em;
+            font-family: var(--font-body);
+            font-weight: 800;
+        }
+
+        .logo img {
+            border-radius: 8px;
+            border-color: rgba(216,155,67,0.55);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .nav-links a:hover,
+        .nav-links a[style] {
+            color: var(--primary-color) !important;
+        }
+
+        .hero,
+        .hero-mini {
+            min-height: 420px;
+            height: auto;
+            padding: 95px 6%;
+            align-items: center;
+        }
+
+        .hero h1,
+        .hero-mini h1 {
+            max-width: 880px;
+            font-family: var(--font-body);
+            font-weight: 800;
+            font-size: clamp(2.25rem, 5vw, 4.7rem);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .hero p,
+        .hero-mini p,
+        .section-header p {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-style: normal;
+            line-height: 1.65;
+        }
+
+        .btn,
+        .menu-tab-btn,
+        .status-badge,
+        .order-badge,
+        .room-tag {
+            border-radius: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #17120b;
+            box-shadow: 0 14px 35px rgba(216,155,67,0.22);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 18px 42px rgba(216,155,67,0.28);
+        }
+
+        .btn-outline {
+            border-color: rgba(216,155,67,0.55);
+            color: var(--primary-color);
+        }
+
+        .dashboard-container,
+        .rooms-grid,
+        .features-grid {
+            max-width: 1160px;
+        }
+
+        .dashboard-panel,
+        .history-panel,
+        .room-card,
+        .feature-card,
+        .order-items-list,
+        .order-delivery-eta,
+        .table-responsive {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .dashboard-panel,
+        .room-content,
+        .feature-card {
+            text-align: left;
+        }
+
+        .room-card:hover,
+        .feature-card:hover,
+        .dashboard-panel:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        .room-img-container {
+            height: 250px;
+        }
+
+        .room-tag {
+            background: rgba(216,155,67,0.95);
+        }
+
+        .section-padding {
+            padding: 86px 6%;
+        }
+
+        .section-header h2,
+        .history-panel h2,
+        .active-order-header h2,
+        .room-content h3 {
+            font-family: var(--font-body);
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.08;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(216,155,67,0.12);
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+        }
+
+        table {
+            background: transparent;
+        }
+
+        th {
+            background: rgba(255,255,255,0.05);
+        }
+
+        footer {
+            background: #0b0a09;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-about img {
+            border-radius: 8px;
+        }
+
+        @media screen and (max-width: 992px) {
+            .nav-links {
+                border-left: 1px solid var(--border-color);
+            }
+            .hero,
+            .hero-mini {
+                min-height: 360px;
+                padding: 78px 6%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+  <!-- Session synchronizer between Django and LocalStorage -->
+  <script>
+    {% if user.is_authenticated %}
+    localStorage.setItem("tuty_user", JSON.stringify({
+      name: "{{ user.first_name|escapejs }}",
+      email: "{{ user.email|escapejs }}"
+    }));
+    {% else %}
+    localStorage.removeItem("tuty_user");
+    {% endif %}
+  </script>
+
+
+    <!-- 🔶 Navigation Bar -->
+    <nav>
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'img/IMG-20251107-WA0050.jpg' %}" alt="Tuty Logo">
+            TUTY <span>RESTO</span>
+        </a>
+        
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="{% url "home" %}">Home</a>
+                <a href="{% url 'home' %}#Story">Our Story</a>
+                <a href="{% url 'home' %}#Menu">Menu</a>
+                <a href="{% url 'home' %}#Pricing">Pricing</a>
+                <a href="{% url 'home' %}#Gallery">Gallery</a>
+                <a href="#" style="color: var(--primary-color);">Party Hall</a>
+                <a href="{% url 'orders' %}">Orders</a>
+                <a href="{% url 'aboutus' %}">About</a>
+                <a href="{% url 'contact' %}">Contact Us</a>
+            </div>
+
+            <button class="menu-toggle" aria-label="Toggle Menu">
+                <svg class="hamburger" viewBox="0 0 100 100" width="40">
+                    <path class="line top" d="M 30,35 H 70" />
+                    <path class="line middle" d="M 30,50 H 70" />
+                    <path class="line bottom" d="M 30,65 H 70" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 👑 Hero Section -->
+    <section class="hero">
+        <h1>Rooms & Party Hall Bookings</h1>
+        <p>Book comfortable rooms and event-ready spaces for family stays, private functions, and celebrations</p>
+        <a href="#booking-section" class="btn btn-primary">View Packages</a>
+    </section>
+
+    <!-- 🛏️ Rooms Section -->
+    <section id="booking-section" class="section-padding">
+        <div class="section-header">
+            <h2>Stay Packages</h2>
+            <p>Choose from practical AC and non-AC rooms with convenient restaurant service nearby</p>
+        </div>
+        
+        <div class="rooms-grid">
+            <!-- Card 1 -->
+            <div class="room-card">
+                <span class="room-tag">AC Room</span>
+                <div class="room-img-container">
+                    <img src="{% static 'img/oyo-15211-hotel-midas.jpg' %}" alt="Couples AC Room">
+                </div>
+                <div class="room-content">
+                    <h3>Couples Room (AC)</h3>
+                    <div class="room-price">Rs.1,500 / night</div>
+                    <ul class="room-features">
+                        <li><span class="check-icon">✓</span> Comfortable Queen Size Bed</li>
+                        <li><span class="check-icon">✓</span> Split Silent Air Conditioner</li>
+                        <li><span class="check-icon">✓</span> High-Speed Wi-Fi Access</li>
+                        <li><span class="check-icon">✓</span> Flat-Screen LED TV & Channels</li>
+                        <li><span class="check-icon">✓</span> Elegant Bathroom Amenities</li>
+                    </ul>
+                    <div class="room-action">
+                        <a href="{% url 'couple_ac' %}" class="btn btn-primary btn-block">Reserve Room</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="room-card">
+                <span class="room-tag">AC Room</span>
+                <div class="room-img-container">
+                    <img src="{% static 'img/slider663ca5c71d399fam2.jpeg' %}" alt="Family AC Room">
+                </div>
+                <div class="room-content">
+                    <h3>Family Room (AC)</h3>
+                    <div class="room-price">Rs.2,500 / night</div>
+                    <ul class="room-features">
+                        <li><span class="check-icon">✓</span> Two Cozy Queen Beds</li>
+                        <li><span class="check-icon">✓</span> High-Power Air Conditioning</li>
+                        <li><span class="check-icon">✓</span> Spacious Lounge Seating Area</li>
+                        <li><span class="check-icon">✓</span> Complimentary Morning Breakfast</li>
+                        <li><span class="check-icon">✓</span> Dedicated VIP Room Service</li>
+                    </ul>
+                    <div class="room-action">
+                        <a href="{% url 'family_ac' %}" class="btn btn-primary btn-block">Reserve Room</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="room-card">
+                <span class="room-tag">Non-AC Room</span>
+                <div class="room-img-container">
+                    <img src="{% static 'img/room.jpg' %}" alt="Couples Non-AC Room">
+                </div>
+                <div class="room-content">
+                    <h3>Couples Room (Non-AC)</h3>
+                    <div class="room-price">Rs.999 / night</div>
+                    <ul class="room-features">
+                        <li><span class="check-icon">✓</span> Comfortable Queen Size Bed</li>
+                        <li><span class="check-icon">✓</span> High-Speed Ceiling Fan</li>
+                        <li><span class="check-icon">✓</span> Wi-Fi Connectivity</li>
+                        <li><span class="check-icon">✓</span> local Cable TV Channels</li>
+                        <li><span class="check-icon">✓</span> Pocket-Friendly Cozy Lodging</li>
+                    </ul>
+                    <div class="room-action">
+                        <a href="{% url 'couple_nonac' %}" class="btn btn-outline btn-block">Book Room</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="room-card">
+                <span class="room-tag">Non-AC Room</span>
+                <div class="room-img-container">
+                    <img src="{% static 'img/mtdc-chikaldhara.jpg' %}" alt="Family Non-AC Room">
+                </div>
+                <div class="room-content">
+                    <h3>Family Room (Non-AC)</h3>
+                    <div class="room-price">Rs.1,499 / night</div>
+                    <ul class="room-features">
+                        <li><span class="check-icon">✓</span> Two Large Double Beds</li>
+                        <li><span class="check-icon">✓</span> Dual High-Speed Fans</li>
+                        <li><span class="check-icon">✓</span> Spacious Family Sofa Setup</li>
+                        <li><span class="check-icon">✓</span> Wi-Fi & Internet Access</li>
+                        <li><span class="check-icon">✓</span> Affordable Family Suite</li>
+                    </ul>
+                    <div class="room-action">
+                        <a href="{% url 'family_nonac' %}" class="btn btn-outline btn-block">Book Room</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🏆 Features Section -->
+    <section class="section-padding features-section">
+        <div class="section-header">
+            <h2>Why Guests Choose Tuty</h2>
+            <p>Helpful services for smooth stays, dining plans, and private events</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">❄️</span>
+                <h3>Full Air-Conditioning</h3>
+                <p>Enjoy luxury temperatures regardless of external weather conditions in all AC rooms and event spaces.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🍽️</span>
+                <h3>Premium Catering</h3>
+                <p>Direct service from the famous Tuty Restaurant kitchen, customized menus tailored to your event taste.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">🔊</span>
+                <h3>Audio-Visual Systems</h3>
+                <p>Complete multi-color party lighting and pro-level audio/karaoke systems available for bookings.</p>
+            </div>
+            <div class="feature-card">
+                <span class="feature-icon">📶</span>
+                <h3>High-Speed Wi-Fi</h3>
+                <p>Complimentary fiber connectivity across the entire premises to ensure you stay connected.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🍮 Footer Section -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <img src="{% static 'img/IMG-20251107-WA0050.jpg' %}" height="55px" alt="Footer Logo">
+                <h3>TUTY RESTAURANT</h3>
+                <p>"Serving delicious meals and providing top-class accommodation with love, freshness, and local tradition in Tuticorin."</p>
+            </div>
+        
+            <div class="footer-links">
+                <h4>Quick Navigation</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'home' %}#Story">Our Story</a></li>
+                    <li><a href="{% url 'home' %}#Menu">Food Menu</a></li>
+                    <li><a href="{% url 'home' %}#Pricing">Feast Pricing</a></li>
+                    <li><a href="#booking-section">Party Hall Venue</a></li>
+                    <li><a href="{% url 'orders' %}">Order Online</a></li>
+                </ul>
+            </div>
+        
+            <div class="footer-contact">
+                <h4>Reach Us</h4>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"><path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"/></svg>
+                    <strong>Phone:</strong> +91 98765 43210
+                </p>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T920-720v480q0 33-23.5 56.5T840-160H160Zm320-280 360-240H120l320 240Zm0 80L120-600v360h720v-360L480-360ZM120-600v400-400Z"/></svg>
+                    <strong>Email:</strong> info@tutyrestaurant.com
+                </p>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"><path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 294q122-112 181-203.5T720-552q0-109-75.5-184.5T480-812q-115 0-190.5 75.5T214-552q0 71 59 162.5T480-186Zm0 106Q319-216 239.5-325.5T160-552q0-150 100.5-249T480-900q162 0 262.5 99T842-552q0 116-79.5 225.5T480-80Zm0-472Z"/></svg>
+                    <strong>Location:</strong> Tuticorin, Tamil Nadu, India
+                </p>
+            </div>
+        </div>
+      
+        <div class="footer-bottom">
+            <p>&copy; 2026 Tuty Restaurant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Toggle Script -->
+    <script>
+        const toggleBtn = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            toggleBtn.classList.toggle('open');
+        });
+
+        // Close dropdown when scroll happens or nav link is clicked
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(function(navItem){
+            navItem.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                toggleBtn.classList.remove('open');
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

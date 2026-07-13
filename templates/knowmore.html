@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Know more</title>
+<style>
+    body{
+        background-color: bisque;
+        margin: 0;
+    }
+
+     #navi{
+            background-color: #ff9800;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            top: 0;
+            color: white;
+            z-index: 1000;
+            font-size: 25px;
+
+        }
+        .con-home
+        {
+            display: flex;
+            position: absolute;
+            margin-top: 14px;
+            margin-left:20px ;
+        }
+        
+  
+
+        /*Description */
+    .description{
+      font-family:'Times New Roman', Times, serif;
+      font-size: 20px;
+      text-align:center;
+    }
+
+     .story{
+      font-size: 35px;
+      color: #151606;
+    }
+  
+        
+
+/* 🍮 Footer Styles */
+footer {
+  background-color: #ff9800;
+  color: white;
+  padding: 2rem 1rem 1rem;
+  
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 3.5rem;
+  max-width: 1200px;
+  margin:auto;
+  
+}
+
+.footer-container div {
+  flex: 1;
+  min-width: 250px;
+}
+
+.footer-about h3 {
+  margin-bottom: 0.5rem;
+}
+
+
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255,255,255,0.3);
+  padding-top: 1rem;
+}
+
+
+/* 📱 Responsive Footer */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-around;
+    
+  }
+}
+
+
+
+
+</style>
+
+
+
+
+
+</head>
+<body>
+  <!-- Session synchronizer between Django and LocalStorage -->
+  <script>
+    {% if user.is_authenticated %}
+    localStorage.setItem("tuty_user", JSON.stringify({
+      name: "{{ user.first_name|escapejs }}",
+      email: "{{ user.email|escapejs }}"
+    }));
+    {% else %}
+    localStorage.removeItem("tuty_user");
+    {% endif %}
+  </script>
+
+    <nav>
+            <a class="con-home" href="{% url 'home' %}"> <svg  xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="white"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg></a>
+        <div id="navi">
+         TUTY   
+        </div>
+    </nav>
+    <h1 class="story" style="text-align: center;">Our History</h1>
+    <p class="description">Welcome to tuty restaurant!One of the greatest and best food restaurant in Tamil Nadu.
+    Famous for our special dish "Chicken Biriyani".We have started to serve since 2025,running very successfully in Tuticorin ,Tamil nadu.
+      </p>
+      <div class="description">
+    <p class="description">
+        Once again ,Welcome to Tuty Restaurant, a culinary gem in Tuticorin, Tamil Nadu, where flavors come alive. Our menu boasts a diverse range of both vegetarian and non-vegetarian delights, carefully crafted to tantalize your taste buds. From traditional South Indian classics to innovative global cuisine, every dish is a testament to our chefs' creativity and dedication.
+
+At Tuty Restaurant, we believe that dining is not just about food; it's about the experience. Our warm and inviting ambiance, impeccable service, and attention to detail ensure that every visit is memorable. Whether you're celebrating a special occasion, enjoying a business lunch, or simply savoring a quiet dinner, we invite you to join us and experience the warmth of our hospitality.
+
+Come, indulge in our culinary journey and discover the flavors that make Tuty Restaurant a beloved destination in Tuticorin."
+
+
+
+<h1 class="story" style="text-align: center;">Our Mission</h1>
+<p class="description">
+Our mission is to provide an exceptional dining experience that exceeds your expectations. We're committed to using fresh,<br> locally sourced ingredients, expertly prepared by our talented chefs.
+</p><br>
+<h1 class="story" style="text-align: center;">Our Services</h1>
+<p class="description">
+From our warm and inviting ambiance to our attentive service, every detail is designed to make you feel at home. Join us for a taste of our culinary journey
+ and<br>discover why tuty restaurant is the perfect place to connect with friends, family, and good food.
+
+You can customize this content to fit your restaurant's unique story and style.
+</p><br>
+
+
+
+
+
+    <!-- 🍮 Footer Section -->
+<footer>
+    <div class="footer-container">
+      <div class="footer-about">
+        <img src="{% static 'img/IMG-20251107-WA0050.jpg' %}" height="50px">
+        <h3>TUTY RESTAURANT</h3><br>
+        <p>"Serving delicious meals with love and tradition <br>Visit us for an unforgettable dining experience".</p>
+      </div><br><br>
+  
+  
+      <div class="footer-contact">
+        <h4 style="font-size: x-large;">Contact Us</h4><br>
+        <p><b>Email:</b> info@tutyrestaurant.com</p>
+        <p><b>Phone:</b> +91 98765 43210</p>
+        <p><b>Location:</b> Tuticorin, Tamil Nadu</p>
+      </div>
+    </div>
+  
+    <div class="footer-bottom">
+      <p>&copy; 2025 Tuty Restaurant. All rights reserved.</p>
+    </div>
+  </footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

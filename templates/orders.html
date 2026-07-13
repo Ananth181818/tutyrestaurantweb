@@ -1,0 +1,1118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Dashboard - Tuty Restaurant</title>
+    <!-- Google Fonts for Luxury Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <style>
+        :root {
+            --primary-color: #ff9800; /* Warm Accent Gold */
+            --primary-hover: #e68a00;
+            --secondary-color: #d4af37; /* Metallic Gold */
+            --bg-color: #0c0c0b; /* Dark background */
+            --bg-card: rgba(22, 22, 20, 0.7); /* Translucent cards */
+            --text-color: #f5f5f7;
+            --text-muted: #a0a0a5;
+            --border-color: rgba(212, 175, 55, 0.12);
+            --border-hover: rgba(212, 175, 55, 0.4);
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* 🔶 Navigation Bar */
+        nav {
+            background: rgba(12, 12, 11, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            transition: var(--transition);
+        }
+
+        nav.scrolled {
+            background: rgba(12, 12, 11, 0.98);
+            padding: 0.8rem 5%;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.6rem;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .logo img {
+            height: 38px;
+            width: auto;
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: none;
+        }
+
+        .hamburger .line {
+            fill: none;
+            stroke: white;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: all 0.4s ease;
+        }
+
+        .menu-toggle.open .top {
+            transform: translateY(15px) rotate(45deg);
+            transform-origin: center;
+        }
+
+        .menu-toggle.open .middle {
+            opacity: 0;
+        }
+
+        .menu-toggle.open .bottom {
+            transform: translateY(-15px) rotate(-45deg);
+            transform-origin: center;
+        }
+
+        /* 👑 Hero Header */
+        .hero-mini {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.9)), 
+                        url("{% static 'stockphotos/foods/top-view-food-frame-with-copy-space.jpg' %}") no-repeat center center/cover;
+            height: 35vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-mini h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .hero-mini p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* 📦 Dashboard container */
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        /* 🔒 State Panels */
+        .dashboard-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        /* Unauthenticated Panel */
+        .lock-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.8rem;
+            border-radius: 30px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #e67e22);
+            color: #000;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e67e22, var(--primary-hover));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.45);
+        }
+
+        /* Active Tracker Card */
+        .active-order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .active-order-header h2 {
+            font-family: var(--font-heading);
+            color: #fff;
+            font-size: 1.6rem;
+            text-align: left;
+        }
+
+        .order-badge {
+            background: rgba(255, 152, 0, 0.15);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .order-tracker-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 40px 0;
+            padding: 0 10px;
+        }
+
+        .order-tracker-line {
+            position: absolute;
+            top: 15px;
+            left: 5%;
+            width: 90%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .order-tracker-line-fill {
+            position: absolute;
+            top: 15px;
+            left: 5%;
+            width: 45%; /* Dynamically change */
+            height: 4px;
+            background: var(--primary-color);
+            z-index: 2;
+            transition: width 1s ease;
+        }
+
+        .tracker-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+            width: 80px;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #181816;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .tracker-step.completed .step-dot {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.4);
+        }
+
+        .tracker-step.active .step-dot {
+            background: #000;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.45);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .tracker-step.completed .step-label,
+        .tracker-step.active .step-label {
+            color: #fff;
+        }
+
+        /* Order Details Row */
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .order-details-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        .order-items-list {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .order-items-list h3 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            padding: 8px 0;
+            color: var(--text-color);
+        }
+
+        .order-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 12px;
+            margin-top: 10px;
+        }
+
+        .order-delivery-eta {
+            background: rgba(255, 152, 0, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .order-delivery-eta h3 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .order-delivery-eta .eta-time {
+            font-size: 2.2rem;
+            font-family: var(--font-heading);
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        /* 📋 Previous Orders Table */
+        .history-panel {
+            text-align: left;
+        }
+
+        .history-panel h2 {
+            font-family: var(--font-heading);
+            color: #fff;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(22, 22, 20, 0.6);
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        td {
+            color: var(--text-color);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.delivered {
+            background: rgba(76, 175, 80, 0.15);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .status-badge.preparing {
+            background: rgba(255, 152, 0, 0.15);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        /* Empty State */
+        .empty-orders-text {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 25px;
+        }
+
+        /* 🍮 Footer Styles */
+        footer {
+            background-color: #080807;
+            color: var(--text-color);
+            padding: 85px 5% 30px 5%;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            font-family: var(--font-body);
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .footer-about img {
+            border-radius: 50%;
+            border: 1px solid var(--primary-color);
+            margin-bottom: 18px;
+        }
+
+        .footer-about h3 {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .footer-about p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer-links h4, .footer-contact h4 {
+            color: #fff;
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            margin-bottom: 25px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-links h4::after, .footer-contact h4::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-contact p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-contact svg {
+            fill: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 60px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 25px;
+        }
+
+        @media screen and (max-width: 992px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: -100%;
+                background-color: rgba(12, 12, 11, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                width: 280px;
+                height: calc(100vh - 70px);
+                padding: 40px 20px;
+                gap: 2rem;
+                box-shadow: -10px 10px 30px rgba(0,0,0,0.5);
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                align-items: flex-start;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                width: 100%;
+                font-size: 1.1rem;
+            }
+            
+            .hero-mini h1 {
+                font-size: 2.2rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+    
+
+        /* Professional page refresh */
+        :root {
+            --primary-color: #d89b43;
+            --primary-hover: #c1802b;
+            --secondary-color: #f0c16b;
+            --bg-color: #11100e;
+            --bg-card: rgba(27, 25, 21, 0.92);
+            --text-color: #fbf6ed;
+            --text-muted: #c9bfad;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --border-hover: rgba(216, 155, 67, 0.55);
+            --shadow: 0 22px 70px rgba(0, 0, 0, 0.34);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 15% 10%, rgba(216,155,67,0.12), transparent 28%),
+                linear-gradient(180deg, #11100e 0%, #171410 48%, #0d0c0b 100%);
+        }
+
+        nav {
+            padding: 1rem 6%;
+            background: rgba(17, 16, 14, 0.92);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            letter-spacing: 0.08em;
+            font-family: var(--font-body);
+            font-weight: 800;
+        }
+
+        .logo img {
+            border-radius: 8px;
+            border-color: rgba(216,155,67,0.55);
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .nav-links a:hover,
+        .nav-links a[style] {
+            color: var(--primary-color) !important;
+        }
+
+        .hero,
+        .hero-mini {
+            min-height: 420px;
+            height: auto;
+            padding: 95px 6%;
+            align-items: center;
+        }
+
+        .hero h1,
+        .hero-mini h1 {
+            max-width: 880px;
+            font-family: var(--font-body);
+            font-weight: 800;
+            font-size: clamp(2.25rem, 5vw, 4.7rem);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .hero p,
+        .hero-mini p,
+        .section-header p {
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-style: normal;
+            line-height: 1.65;
+        }
+
+        .btn,
+        .menu-tab-btn,
+        .status-badge,
+        .order-badge,
+        .room-tag {
+            border-radius: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #17120b;
+            box-shadow: 0 14px 35px rgba(216,155,67,0.22);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 18px 42px rgba(216,155,67,0.28);
+        }
+
+        .btn-outline {
+            border-color: rgba(216,155,67,0.55);
+            color: var(--primary-color);
+        }
+
+        .dashboard-container,
+        .rooms-grid,
+        .features-grid {
+            max-width: 1160px;
+        }
+
+        .dashboard-panel,
+        .history-panel,
+        .room-card,
+        .feature-card,
+        .order-items-list,
+        .order-delivery-eta,
+        .table-responsive {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .dashboard-panel,
+        .room-content,
+        .feature-card {
+            text-align: left;
+        }
+
+        .room-card:hover,
+        .feature-card:hover,
+        .dashboard-panel:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+        }
+
+        .room-img-container {
+            height: 250px;
+        }
+
+        .room-tag {
+            background: rgba(216,155,67,0.95);
+        }
+
+        .section-padding {
+            padding: 86px 6%;
+        }
+
+        .section-header h2,
+        .history-panel h2,
+        .active-order-header h2,
+        .room-content h3 {
+            font-family: var(--font-body);
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.08;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(216,155,67,0.12);
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+        }
+
+        table {
+            background: transparent;
+        }
+
+        th {
+            background: rgba(255,255,255,0.05);
+        }
+
+        footer {
+            background: #0b0a09;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-about img {
+            border-radius: 8px;
+        }
+
+        @media screen and (max-width: 992px) {
+            .nav-links {
+                border-left: 1px solid var(--border-color);
+            }
+            .hero,
+            .hero-mini {
+                min-height: 360px;
+                padding: 78px 6%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+  <!-- Session synchronizer between Django and LocalStorage -->
+  <script>
+    {% if user.is_authenticated %}
+    localStorage.setItem("tuty_user", JSON.stringify({
+      name: "{{ user.first_name|escapejs }}",
+      email: "{{ user.email|escapejs }}"
+    }));
+    {% else %}
+    localStorage.removeItem("tuty_user");
+    {% endif %}
+  </script>
+
+
+    <!-- 🔶 Navigation Bar -->
+    <nav>
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'img/IMG-20251107-WA0050.jpg' %}" alt="Tuty Logo">
+            TUTY <span>RESTO</span>
+        </a>
+        
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'home' %}#Story">Our Story</a>
+                <a href="{% url 'home' %}#Menu">Menu</a>
+                <a href="{% url 'home' %}#Pricing">Pricing</a>
+                <a href="{% url 'home' %}#Gallery">Gallery</a>
+                <a href="{% url 'party' %}">Party Hall</a>
+                <a href="#" style="color: var(--primary-color);">Orders</a>
+                <a href="{% url 'aboutus' %}">About</a>
+                <a href="{% url 'contact' %}">Contact Us</a>
+            </div>
+
+            <button class="menu-toggle" aria-label="Toggle Menu">
+                <svg class="hamburger" viewBox="0 0 100 100" width="40">
+                    <path class="line top" d="M 30,35 H 70" />
+                    <path class="line middle" d="M 30,50 H 70" />
+                    <path class="line bottom" d="M 30,65 H 70" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 👑 Hero Mini Section -->
+    <section class="hero-mini">
+        <h1>Orders Dashboard</h1>
+        <p>Track active orders, delivery timelines, and previous restaurant purchases in one clean dashboard</p>
+    </section>
+
+    <!-- 📦 Dashboard container -->
+    <div class="dashboard-container">
+        
+        <!-- Panel 1: Locked State (Not Logged In) -->
+        <div class="dashboard-panel" id="logged-out-panel">
+            <div class="lock-icon">🔒</div>
+            <h2 style="font-family: var(--font-heading); color: #fff; font-size: 1.6rem; margin-bottom: 10px;">Login Required</h2>
+            <p class="empty-orders-text" style="max-width: 500px; margin: 0 auto 25px auto;">Please sign in to your Tuty account to check active orders, tracking timelines, and billing history.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">Go to Login Page</a>
+        </div>
+
+        <!-- Panel 2: Logged In State (Active Order) -->
+        <div class="dashboard-panel" id="active-order-panel" style="display: none;">
+            <div class="active-order-header">
+                <h2 id="welcome-message">Active Order Details</h2>
+                <span class="order-badge">OrderID: #TUTY-89210</span>
+            </div>
+
+            <!-- Tracker Graphics -->
+            <div class="order-tracker-bar">
+                <div class="order-tracker-line"></div>
+                <div class="order-tracker-line-fill" id="tracker-line-fill"></div>
+                
+                <div class="tracker-step completed">
+                    <div class="step-dot">✓</div>
+                    <span class="step-label">Ordered</span>
+                </div>
+                <div class="tracker-step active">
+                    <div class="step-dot">2</div>
+                    <span class="step-label">Preparing</span>
+                </div>
+                <div class="tracker-step">
+                    <div class="step-dot">3</div>
+                    <span class="step-label">On the Way</span>
+                </div>
+                <div class="tracker-step">
+                    <div class="step-dot">4</div>
+                    <span class="step-label">Delivered</span>
+                </div>
+            </div>
+
+            <!-- Details grid -->
+            <div class="order-details-grid">
+                <div class="order-items-list">
+                    <h3>Order Summary</h3>
+                    {% if ordered_item %}
+                    <div class="order-item-row">
+                        <span>1x {{ ordered_item.name }}</span>
+                        <span>{{ ordered_item.price }}</span>
+                    </div>
+                    <div class="order-total-row">
+                        <span>Total Paid</span>
+                        <span>{{ ordered_item.price }}</span>
+                    </div>
+                    {% else %}
+                    <div class="order-item-row">
+                        <span>1x Royal Gourmet Buffet Platter</span>
+                        <span>Rs.499</span>
+                    </div>
+                    <div class="order-item-row">
+                        <span>2x Cheese Pizza (Large)</span>
+                        <span>Rs.120</span>
+                    </div>
+                    <div class="order-item-row">
+                        <span>1x Crispy-fried Cauliflower</span>
+                        <span>Rs.60</span>
+                    </div>
+                    <div class="order-total-row">
+                        <span>Total Paid</span>
+                        <span>Rs.679</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="order-delivery-eta">
+                    <h3>Estimated Delivery</h3>
+                    <div class="eta-time">22 min</div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Our delivery agent is preparing to transport your piping-hot gourmet meal.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Panel -->
+        <div class="history-panel" id="history-panel" style="display: none;">
+            <h2>Previous Orders</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Items Ordered</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>#TUTY-79401</strong></td>
+                            <td>June 24, 2026</td>
+                            <td>2x Special Dosa, 1x Veg Sandwich</td>
+                            <td>Rs.120</td>
+                            <td><span class="status-badge delivered">Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>#TUTY-78210</strong></td>
+                            <td>June 20, 2026</td>
+                            <td>1x Chicken Biryani, 3x Parotta</td>
+                            <td>Rs.180</td>
+                            <td><span class="status-badge delivered">Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>#TUTY-77890</strong></td>
+                            <td>June 12, 2026</td>
+                            <td>1x Barbecue Chicken Pizza, 1x Chicken Roll</td>
+                            <td>Rs.160</td>
+                            <td><span class="status-badge delivered">Delivered</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 🍮 Footer Section -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <img src="{% static 'img/IMG-20251107-WA0050.jpg' %}" height="55px" alt="Footer Logo">
+                <h3>TUTY RESTAURANT</h3>
+                <p>"Serving delicious meals and providing top-class accommodation with love, freshness, and local tradition in Tuticorin."</p>
+            </div>
+        
+            <div class="footer-links">
+                <h4>Quick Navigation</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'home' %}#Story">Our Story</a></li>
+                    <li><a href="{% url 'home' %}#Menu">Food Menu</a></li>
+                    <li><a href="{% url 'home' %}#Pricing">Feast Pricing</a></li>
+                    <li><a href="{% url 'party' %}">Party Hall Venue</a></li>
+                    <li><a href="#">Order Online</a></li>
+                </ul>
+            </div>
+        
+            <div class="footer-contact">
+                <h4>Reach Us</h4>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"><path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"/></svg>
+                    <strong>Phone:</strong> +91 98765 43210
+                </p>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T920-720v480q0 33-23.5 56.5T840-160H160Zm320-280 360-240H120l320 240Zm0 80L120-600v360h720v-360L480-360ZM120-600v400-400Z"/></svg>
+                    <strong>Email:</strong> info@tutyrestaurant.com
+                </p>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px"><path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 294q122-112 181-203.5T720-552q0-109-75.5-184.5T480-812q-115 0-190.5 75.5T214-552q0 71 59 162.5T480-186Zm0 106Q319-216 239.5-325.5T160-552q0-150 100.5-249T480-900q162 0 262.5 99T842-552q0 116-79.5 225.5T480-80Zm0-472Z"/></svg>
+                    <strong>Location:</strong> Tuticorin, Tamil Nadu, India
+                </p>
+            </div>
+        </div>
+      
+        <div class="footer-bottom">
+            <p>&copy; 2026 Tuty Restaurant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts to Toggle Panels Dynamically -->
+    <script>
+        // --- Mobile Menu Toggle ---
+        const toggleBtn = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            toggleBtn.classList.toggle('open');
+        });
+
+        // Close dropdown when any nav link is clicked
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(function(navItem){
+            navItem.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                toggleBtn.classList.remove('open');
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // --- Session check ---
+        $(document).ready(function() {
+            const userJson = localStorage.getItem("tuty_user");
+            if (userJson) {
+                const user = JSON.parse(userJson);
+                $('#logged-out-panel').hide();
+                $('#active-order-panel').show();
+                $('#history-panel').show();
+                $('#welcome-message').text("Hello, " + user.name.split(' ')[0] + "! Your Active Order Status:");
+                
+                // Animate tracker bar line dynamically
+                setTimeout(() => {
+                    $('#tracker-line-fill').css('width', '35%');
+                }, 300);
+            } else {
+                $('#logged-out-panel').show();
+                $('#active-order-panel').hide();
+                $('#history-panel').hide();
+            }
+        });
+    </script>
+</body>
+</html>
